@@ -257,7 +257,7 @@ void pybind_core_tensor(py::module& m) {
             }),
             "shape"_a, "dtype"_a = py::none(), "device"_a = py::none());
 
-    pybind_core_tensor_accessor(tensor);
+    // pybind_core_tensor_accessor(tensor);
 
     // Tensor creation API.
     BindTensorCreation(tensor, "empty", Tensor::Empty);

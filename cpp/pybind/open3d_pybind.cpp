@@ -64,7 +64,7 @@ PYBIND11_MODULE(pybind, m) {
     ml::pybind_ml(m);
     io::pybind_io(m);
     pipelines::pybind_pipelines(m);
-    visualization::pybind_visualization(m);
+    // visualization::pybind_visualization(m);
 }
 
 }  // namespace open3d

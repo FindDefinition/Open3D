@@ -76,7 +76,7 @@ if __DEVICE_API__ == 'cpu':
     from open3d.cpu import pybind
 
 import open3d.core
-import open3d.visualization
+# import open3d.visualization
 
 __version__ = "@PROJECT_VERSION@"
 
