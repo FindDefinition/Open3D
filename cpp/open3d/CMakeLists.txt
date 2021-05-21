@@ -24,11 +24,6 @@ add_subdirectory(io)
 add_subdirectory(ml)
 add_subdirectory(pipelines)
 add_subdirectory(utility)
-add_subdirectory(visualization)
-if (BUILD_GUI)
-    add_subdirectory(visualization/gui)
-    set(GUI_OBJECTS "$<TARGET_OBJECTS:GUI>")
-endif()
 
 # Source group for Visual Studio
 add_source_group(camera)
@@ -41,7 +36,6 @@ add_source_group(ml)
 add_source_group(pipelines)
 add_source_group(tpipelines)
 add_source_group(utility)
-add_source_group(visualization)
 
 # note: adding at least one real source file to any target that references
 # reference: https://cmake.org/cmake/help/v3.12/command/add_library.html#object-libraries
@@ -57,7 +51,6 @@ add_library(${CMAKE_PROJECT_NAME}
     $<TARGET_OBJECTS:pipelines>
     $<TARGET_OBJECTS:tpipelines>
     $<TARGET_OBJECTS:utility>
-    $<TARGET_OBJECTS:visualization>
     ${GUI_OBJECTS}
 )
 open3d_show_and_abort_on_warning(${PROJECT_NAME})

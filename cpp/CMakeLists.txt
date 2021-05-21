@@ -20,8 +20,6 @@ function(open3d_show_and_abort_on_warning trgt)
 endfunction()
 
 add_subdirectory(open3d)
-add_subdirectory(tools)
-add_subdirectory(apps)
 if (BUILD_UNIT_TESTS)
     add_subdirectory(tests)
 endif()

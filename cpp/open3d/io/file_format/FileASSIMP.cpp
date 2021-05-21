@@ -37,8 +37,6 @@
 #include "open3d/io/TriangleMeshIO.h"
 #include "open3d/utility/Console.h"
 #include "open3d/utility/FileSystem.h"
-#include "open3d/visualization/rendering/Material.h"
-#include "open3d/visualization/rendering/Model.h"
 
 #define AI_MATKEY_CLEARCOAT_THICKNESS "$mat.clearcoatthickness", 0, 0
 #define AI_MATKEY_CLEARCOAT_ROUGHNESS "$mat.clearcoatroughness", 0, 0
@@ -271,132 +269,132 @@ bool ReadTriangleMeshUsingASSIMP(const std::string& filename,
     return true;
 }
 
-bool ReadModelUsingAssimp(const std::string& filename,
-                          visualization::rendering::TriangleMeshModel& model,
-                          bool print_progress) {
-    Assimp::Importer importer;
-    const auto* scene = importer.ReadFile(filename.c_str(), kPostProcessFlags);
-    if (!scene) {
-        utility::LogWarning("Unable to load file {} with ASSIMP", filename);
-        return false;
-    }
+// bool ReadModelUsingAssimp(const std::string& filename,
+//                           visualization::rendering::TriangleMeshModel& model,
+//                           bool print_progress) {
+//     Assimp::Importer importer;
+//     const auto* scene = importer.ReadFile(filename.c_str(), kPostProcessFlags);
+//     if (!scene) {
+//         utility::LogWarning("Unable to load file {} with ASSIMP", filename);
+//         return false;
+//     }
 
-    // Process each Assimp mesh into a geometry::TriangleMesh
-    for (size_t midx = 0; midx < scene->mNumMeshes; ++midx) {
-        const auto* assimp_mesh = scene->mMeshes[midx];
-        // Only process triangle meshes
-        if (assimp_mesh->mPrimitiveTypes != aiPrimitiveType_TRIANGLE) {
-            utility::LogInfo(
-                    "Skipping non-triangle primitive geometry of type: "
-                    "{}",
-                    assimp_mesh->mPrimitiveTypes);
-            continue;
-        }
+//     // Process each Assimp mesh into a geometry::TriangleMesh
+//     for (size_t midx = 0; midx < scene->mNumMeshes; ++midx) {
+//         const auto* assimp_mesh = scene->mMeshes[midx];
+//         // Only process triangle meshes
+//         if (assimp_mesh->mPrimitiveTypes != aiPrimitiveType_TRIANGLE) {
+//             utility::LogInfo(
+//                     "Skipping non-triangle primitive geometry of type: "
+//                     "{}",
+//                     assimp_mesh->mPrimitiveTypes);
+//             continue;
+//         }
 
-        std::shared_ptr<geometry::TriangleMesh> mesh =
-                std::make_shared<geometry::TriangleMesh>();
+//         std::shared_ptr<geometry::TriangleMesh> mesh =
+//                 std::make_shared<geometry::TriangleMesh>();
 
-        // copy vertex data
-        for (size_t vidx = 0; vidx < assimp_mesh->mNumVertices; ++vidx) {
-            auto& vertex = assimp_mesh->mVertices[vidx];
-            mesh->vertices_.push_back(
-                    Eigen::Vector3d(vertex.x, vertex.y, vertex.z));
-        }
+//         // copy vertex data
+//         for (size_t vidx = 0; vidx < assimp_mesh->mNumVertices; ++vidx) {
+//             auto& vertex = assimp_mesh->mVertices[vidx];
+//             mesh->vertices_.push_back(
+//                     Eigen::Vector3d(vertex.x, vertex.y, vertex.z));
+//         }
 
-        // copy face indices data
-        for (size_t fidx = 0; fidx < assimp_mesh->mNumFaces; ++fidx) {
-            auto& face = assimp_mesh->mFaces[fidx];
-            Eigen::Vector3i facet(face.mIndices[0], face.mIndices[1],
-                                  face.mIndices[2]);
-            mesh->triangles_.push_back(facet);
-        }
+//         // copy face indices data
+//         for (size_t fidx = 0; fidx < assimp_mesh->mNumFaces; ++fidx) {
+//             auto& face = assimp_mesh->mFaces[fidx];
+//             Eigen::Vector3i facet(face.mIndices[0], face.mIndices[1],
+//                                   face.mIndices[2]);
+//             mesh->triangles_.push_back(facet);
+//         }
 
-        if (assimp_mesh->mNormals) {
-            for (size_t nidx = 0; nidx < assimp_mesh->mNumVertices; ++nidx) {
-                auto& normal = assimp_mesh->mNormals[nidx];
-                mesh->vertex_normals_.push_back({normal.x, normal.y, normal.z});
-            }
-        }
+//         if (assimp_mesh->mNormals) {
+//             for (size_t nidx = 0; nidx < assimp_mesh->mNumVertices; ++nidx) {
+//                 auto& normal = assimp_mesh->mNormals[nidx];
+//                 mesh->vertex_normals_.push_back({normal.x, normal.y, normal.z});
+//             }
+//         }
 
-        // NOTE: only use the first UV channel
-        if (assimp_mesh->HasTextureCoords(0)) {
-            for (size_t fidx = 0; fidx < assimp_mesh->mNumFaces; ++fidx) {
-                auto& face = assimp_mesh->mFaces[fidx];
-                auto& uv1 = assimp_mesh->mTextureCoords[0][face.mIndices[0]];
-                auto& uv2 = assimp_mesh->mTextureCoords[0][face.mIndices[1]];
-                auto& uv3 = assimp_mesh->mTextureCoords[0][face.mIndices[2]];
-                mesh->triangle_uvs_.push_back(Eigen::Vector2d(uv1.x, uv1.y));
-                mesh->triangle_uvs_.push_back(Eigen::Vector2d(uv2.x, uv2.y));
-                mesh->triangle_uvs_.push_back(Eigen::Vector2d(uv3.x, uv3.y));
-            }
-        }
+//         // NOTE: only use the first UV channel
+//         if (assimp_mesh->HasTextureCoords(0)) {
+//             for (size_t fidx = 0; fidx < assimp_mesh->mNumFaces; ++fidx) {
+//                 auto& face = assimp_mesh->mFaces[fidx];
+//                 auto& uv1 = assimp_mesh->mTextureCoords[0][face.mIndices[0]];
+//                 auto& uv2 = assimp_mesh->mTextureCoords[0][face.mIndices[1]];
+//                 auto& uv3 = assimp_mesh->mTextureCoords[0][face.mIndices[2]];
+//                 mesh->triangle_uvs_.push_back(Eigen::Vector2d(uv1.x, uv1.y));
+//                 mesh->triangle_uvs_.push_back(Eigen::Vector2d(uv2.x, uv2.y));
+//                 mesh->triangle_uvs_.push_back(Eigen::Vector2d(uv3.x, uv3.y));
+//             }
+//         }
 
-        // NOTE: only use the first color attribute
-        if (assimp_mesh->HasVertexColors(0)) {
-            for (size_t cidx = 0; cidx < assimp_mesh->mNumVertices; ++cidx) {
-                auto& c = assimp_mesh->mColors[0][cidx];
-                mesh->vertex_colors_.push_back({c.r, c.g, c.b});
-            }
-        }
+//         // NOTE: only use the first color attribute
+//         if (assimp_mesh->HasVertexColors(0)) {
+//             for (size_t cidx = 0; cidx < assimp_mesh->mNumVertices; ++cidx) {
+//                 auto& c = assimp_mesh->mColors[0][cidx];
+//                 mesh->vertex_colors_.push_back({c.r, c.g, c.b});
+//             }
+//         }
 
-        // Add the mesh to the model
-        model.meshes_.push_back({mesh, std::string(assimp_mesh->mName.C_Str()),
-                                 assimp_mesh->mMaterialIndex});
-    }
+//         // Add the mesh to the model
+//         model.meshes_.push_back({mesh, std::string(assimp_mesh->mName.C_Str()),
+//                                  assimp_mesh->mMaterialIndex});
+//     }
 
-    // Load materials
-    for (size_t i = 0; i < scene->mNumMaterials; ++i) {
-        auto* mat = scene->mMaterials[i];
+//     // Load materials
+//     for (size_t i = 0; i < scene->mNumMaterials; ++i) {
+//         auto* mat = scene->mMaterials[i];
 
-        visualization::rendering::Material o3d_mat;
+//         visualization::rendering::Material o3d_mat;
 
-        o3d_mat.name = mat->GetName().C_Str();
+//         o3d_mat.name = mat->GetName().C_Str();
 
-        // Retrieve base material properties
-        aiColor3D color(1.f, 1.f, 1.f);
+//         // Retrieve base material properties
+//         aiColor3D color(1.f, 1.f, 1.f);
 
-        mat->Get(AI_MATKEY_COLOR_DIFFUSE, color);
-        o3d_mat.base_color = Eigen::Vector4f(color.r, color.g, color.b, 1.f);
-        mat->Get(AI_MATKEY_GLTF_PBRMETALLICROUGHNESS_METALLIC_FACTOR,
-                 o3d_mat.base_metallic);
-        mat->Get(AI_MATKEY_GLTF_PBRMETALLICROUGHNESS_ROUGHNESS_FACTOR,
-                 o3d_mat.base_roughness);
-        mat->Get(AI_MATKEY_REFLECTIVITY, o3d_mat.base_reflectance);
-        mat->Get(AI_MATKEY_SHEEN, o3d_mat.base_reflectance);
+//         mat->Get(AI_MATKEY_COLOR_DIFFUSE, color);
+//         o3d_mat.base_color = Eigen::Vector4f(color.r, color.g, color.b, 1.f);
+//         mat->Get(AI_MATKEY_GLTF_PBRMETALLICROUGHNESS_METALLIC_FACTOR,
+//                  o3d_mat.base_metallic);
+//         mat->Get(AI_MATKEY_GLTF_PBRMETALLICROUGHNESS_ROUGHNESS_FACTOR,
+//                  o3d_mat.base_roughness);
+//         mat->Get(AI_MATKEY_REFLECTIVITY, o3d_mat.base_reflectance);
+//         mat->Get(AI_MATKEY_SHEEN, o3d_mat.base_reflectance);
 
-        mat->Get(AI_MATKEY_CLEARCOAT_THICKNESS, o3d_mat.base_clearcoat);
-        mat->Get(AI_MATKEY_CLEARCOAT_ROUGHNESS,
-                 o3d_mat.base_clearcoat_roughness);
-        mat->Get(AI_MATKEY_ANISOTROPY, o3d_mat.base_anisotropy);
-        aiString alpha_mode;
-        mat->Get(AI_MATKEY_GLTF_ALPHAMODE, alpha_mode);
-        std::string alpha_mode_str(alpha_mode.C_Str());
-        if (alpha_mode_str == "BLEND" || alpha_mode_str == "MASK") {
-            o3d_mat.has_alpha = true;
-        }
+//         mat->Get(AI_MATKEY_CLEARCOAT_THICKNESS, o3d_mat.base_clearcoat);
+//         mat->Get(AI_MATKEY_CLEARCOAT_ROUGHNESS,
+//                  o3d_mat.base_clearcoat_roughness);
+//         mat->Get(AI_MATKEY_ANISOTROPY, o3d_mat.base_anisotropy);
+//         aiString alpha_mode;
+//         mat->Get(AI_MATKEY_GLTF_ALPHAMODE, alpha_mode);
+//         std::string alpha_mode_str(alpha_mode.C_Str());
+//         if (alpha_mode_str == "BLEND" || alpha_mode_str == "MASK") {
+//             o3d_mat.has_alpha = true;
+//         }
 
-        // Retrieve textures
-        TextureImages maps;
-        LoadTextures(filename, mat, maps);
-        o3d_mat.albedo_img = maps.albedo;
-        o3d_mat.normal_img = maps.normal;
-        o3d_mat.ao_img = maps.ao;
-        o3d_mat.metallic_img = maps.metallic;
-        o3d_mat.roughness_img = maps.roughness;
-        o3d_mat.reflectance_img = maps.reflectance;
-        o3d_mat.ao_rough_metal_img = maps.gltf_rough_metal;
+//         // Retrieve textures
+//         TextureImages maps;
+//         LoadTextures(filename, mat, maps);
+//         o3d_mat.albedo_img = maps.albedo;
+//         o3d_mat.normal_img = maps.normal;
+//         o3d_mat.ao_img = maps.ao;
+//         o3d_mat.metallic_img = maps.metallic;
+//         o3d_mat.roughness_img = maps.roughness;
+//         o3d_mat.reflectance_img = maps.reflectance;
+//         o3d_mat.ao_rough_metal_img = maps.gltf_rough_metal;
 
-        if (o3d_mat.has_alpha) {
-            o3d_mat.shader = "defaultLitTransparency";
-        } else {
-            o3d_mat.shader = "defaultLit";
-        }
+//         if (o3d_mat.has_alpha) {
+//             o3d_mat.shader = "defaultLitTransparency";
+//         } else {
+//             o3d_mat.shader = "defaultLit";
+//         }
 
-        model.materials_.push_back(o3d_mat);
-    }
+//         model.materials_.push_back(o3d_mat);
+//     }
 
-    return true;
-}
+//     return true;
+// }
 
 }  // namespace io
 }  // namespace open3d

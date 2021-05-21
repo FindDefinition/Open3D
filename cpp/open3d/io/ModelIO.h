@@ -37,9 +37,9 @@ struct TriangleMeshModel;
 
 namespace io {
 
-bool ReadTriangleModel(const std::string& filename,
-                       visualization::rendering::TriangleMeshModel& model,
-                       bool print_progress);
+// bool ReadTriangleModel(const std::string& filename,
+//                        visualization::rendering::TriangleMeshModel& model,
+//                        bool print_progress);
 
 }  // namespace io
 }  // namespace open3d

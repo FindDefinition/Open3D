@@ -34,15 +34,15 @@
 namespace open3d {
 namespace io {
 
-bool ReadModelUsingAssimp(const std::string& filename,
-                          visualization::rendering::TriangleMeshModel& model,
-                          bool print_progress);
+// bool ReadModelUsingAssimp(const std::string& filename,
+//                           visualization::rendering::TriangleMeshModel& model,
+//                           bool print_progress);
 
-bool ReadTriangleModel(const std::string& filename,
-                       visualization::rendering::TriangleMeshModel& model,
-                       bool print_progress) {
-    return ReadModelUsingAssimp(filename, model, print_progress);
-}
+// bool ReadTriangleModel(const std::string& filename,
+//                        visualization::rendering::TriangleMeshModel& model,
+//                        bool print_progress) {
+//     return ReadModelUsingAssimp(filename, model, print_progress);
+// }
 
 }  // namespace io
 }  // namespace open3d
