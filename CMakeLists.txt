@@ -26,7 +26,7 @@ option(BUILD_JUPYTER_EXTENSION    "Enable Jupyter support for Open3D"        OFF
 option(WITH_OPENMP                "Use OpenMP multi-threading"               ON )
 option(ENABLE_HEADLESS_RENDERING  "Use OSMesa for headless rendering"        OFF)
 option(STATIC_WINDOWS_RUNTIME     "Use static (MT/MTd) Windows runtime"      ON )
-option(GLIBCXX_USE_CXX11_ABI      "Set -D_GLIBCXX_USE_CXX11_ABI=1"           OFF)
+option(GLIBCXX_USE_CXX11_ABI      "Set -D_GLIBCXX_USE_CXX11_ABI=1"           ON)
 option(BUILD_RPC_INTERFACE        "Build the RPC interface"                  OFF)
 # 3rd-party build options
 option(USE_BLAS                   "Use BLAS/LAPACK instead of MKL"           OFF)
