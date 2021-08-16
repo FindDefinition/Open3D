@@ -1,0 +1,19 @@
+name: open3d
+version: 0.13.0
+maintainer: Yan Yan <yan.yan@tusimple.com>
+
+extra_deps:
+  pip3: ipywidgets widgetsnbextension notebook numpy matplotlib
+  apt: xorg-dev libglu1-mesa-dev libsdl2-dev ninja-build libxi-dev libtbb-dev libosmesa6-dev libudev-dev autoconf libtool libc++abi-9-dev libc++-9-dev
+
+build: |
+  mkdir -p build
+  cd ./build
+  cmake -DCMAKE_INSTALL_PREFIX="$INSTALL_DIR" -DGLIBCXX_USE_CXX11_ABI=ON -DBUILD_SHARED_LIBS=ON .. 
+  # here we can't use make -j$(nproc) because too much processes run git clone will cause hang.
+  make -j8 VERBOSE=1
+  make install-pip-package
+  make python-package
+  make pip-package
+  make install
+  pip3 install --prefix $INSTALL_DIR --no-dependencies --ignore-installed $(ls lib/python_package/pip_package/*.whl)

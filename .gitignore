@@ -89,3 +89,6 @@ docs/_out/
 docs/python_api/
 docs/Doxyfile
 docs/getting_started.rst
+
+.develop
+.release
