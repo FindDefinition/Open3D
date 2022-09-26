@@ -9,7 +9,7 @@ extra_deps:
 build: |
   mkdir -p build
   cd ./build
-  cmake -DCMAKE_INSTALL_PREFIX="$INSTALL_DIR" -DGLIBCXX_USE_CXX11_ABI=ON -DBUILD_SHARED_LIBS=ON -DBUILD_COMMON_CUDA_ARCHS=ON -DBUILD_CUDA_MODULE=ON .. 
+  cmake -DCMAKE_INSTALL_PREFIX="$INSTALL_DIR" -DGLIBCXX_USE_CXX11_ABI=ON -DBUILD_SHARED_LIBS=ON -DBUILD_COMMON_CUDA_ARCHS=ON -DBUILD_CUDA_MODULE=ON -DUSE_BLAS=ON .. 
   # here we can't use make -j$(nproc) because too much processes run git clone will cause hang.
   make -j8 VERBOSE=1
   make install-pip-package
